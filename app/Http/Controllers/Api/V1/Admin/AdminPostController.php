@@ -3,10 +3,24 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Repositories\V1\PostRepository;
+use App\Http\Resources\V1\PostResource;
+use App\Http\Resources\V1\PostCollection;
 use Illuminate\Http\Request;
+use App\Models\Post;
 
 class AdminPostController extends Controller
 {
+    protected $postRepository;
+
+    /**
+     * Class constructor.
+     */
+    public function __construct(PostRepository $postRepository)
+    {
+        $this->postRepository = $postRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,17 +28,8 @@ class AdminPostController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $posts = $this->postRepository->getAllPosts();
+        return new PostCollection($posts);
     }
 
     /**
@@ -35,7 +40,9 @@ class AdminPostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $post = $this->postRepository->insertPostRow($data);
+        return new PostResource($post);
     }
 
     /**
@@ -44,20 +51,9 @@ class AdminPostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Post $post)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return new PostResource($post);
     }
 
     /**
