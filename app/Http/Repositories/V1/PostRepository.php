@@ -19,6 +19,23 @@ class PostRepository
     {
         return Post::create($data);
     }
+
+    // Update post row to database
+    public function getPostById($id)
+    {
+        return Post::find($id);
+    }
+
+    // Update post row to database
+    public function updatePostRow($post, $data)
+    {
+        $post->fill($data);
+    }
+
+    public function deletePostRow($post)
+    {
+        return $post->delete();
+    }
 }
 
 
