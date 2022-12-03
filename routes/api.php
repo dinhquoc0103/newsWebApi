@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Api\V1\Admin\AdminPostController;
+use App\Http\Controllers\Api\V1\Admin\AdminPostCategoryController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,5 +24,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::prefix('v1')->group(function () {
     Route::prefix('admin')->group(function () {
        Route::resource('post', AdminPostController::class)->except(['create', 'edit']); 
+       Route::resource('postCategory', AdminPostCategoryController::class)->except(['create', 'edit']); 
     });
 });

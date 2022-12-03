@@ -3,10 +3,25 @@
 namespace App\Http\Controllers\Api\V1\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Repositories\V1\PostCategoryRepository;
+use App\Http\Resources\V1\PostCategoryResource;
+use App\Http\Resources\V1\PostCategoryCollection;
 use Illuminate\Http\Request;
+use App\Models\PostCategory;
 
 class AdminPostCategoryController extends Controller
 {
+
+    protected $postCategoryRepository;
+
+    /**
+     * Class constructor.
+     */
+    public function __construct(PostCategoryRepository $postCategoryRepository)
+    {
+        $this->postCategoryRepository = $postCategoryRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,17 +29,8 @@ class AdminPostCategoryController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $postCategories = $this->postCategoryRepository->getAllPostCategories();
+        return new PostCategoryCollection($postCategories);
     }
 
     /**
@@ -35,7 +41,9 @@ class AdminPostCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $postCategory = $this->postCategoryRepository->insertPostCategoryRow($data);
+        return new PostCategoryResource($postCategory);
     }
 
     /**
@@ -46,18 +54,12 @@ class AdminPostCategoryController extends Controller
      */
     public function show($id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        $postCategory = $this->postCategoryRepository->getPostCategoryById($id);
+        if(!is_object($postCategory))
+        {
+            return "Invalid ID";
+        }
+        return new PostCategoryResource($postCategory);
     }
 
     /**
@@ -67,9 +69,11 @@ class AdminPostCategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(PostCategory $postCategory, Request $request)
     {
-        //
+        $data = $request->all();
+        $this->postCategoryRepository->updatePostCategoryRow($postCategory, $data);
+        return new PostCategoryResource($postCategory);
     }
 
     /**
@@ -80,6 +84,14 @@ class AdminPostCategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $postCategory = $this->postCategoryRepository->getPostCategoryById($id);
+        if(!is_object($postCategory))
+        {
+            return "Invalid ID";
+        }
+        $result = $this->postCategoryRepository->deletePostCategoryRow($postCategory);
+        return response()->json([
+            "message" => $result
+        ]);
     }
 }
