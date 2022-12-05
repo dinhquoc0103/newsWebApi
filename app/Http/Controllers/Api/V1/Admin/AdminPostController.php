@@ -13,31 +13,22 @@ class AdminPostController extends Controller
 {
     protected $postRepository;
 
-    /**
-     * Class constructor.
-     */
+    // Class constructor.
     public function __construct(PostRepository $postRepository)
     {
         $this->postRepository = $postRepository;
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    // Display a listing of the resource.
     public function index()
     {
         $posts = $this->postRepository->getAllPosts();
         return new PostCollection($posts);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
+    // Store a newly created resource in storage.
     public function store(Request $request)
     {
         $data = $request->all();
@@ -45,12 +36,7 @@ class AdminPostController extends Controller
         return new PostResource($post);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Display the specified resource.
     public function show($id)
     {   
         $post = $this->postRepository->getPostById($id);
@@ -61,13 +47,7 @@ class AdminPostController extends Controller
         return new PostResource($post);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Update the specified resource in storage.
     public function update(Post $post, Request $request)
     {
         $data = $request->all();
@@ -75,12 +55,7 @@ class AdminPostController extends Controller
         return new PostResource($post);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    // Remove the specified resource from storage.
     public function destroy($id)
     {
         $post = $this->postRepository->getPostById($id);
@@ -93,4 +68,14 @@ class AdminPostController extends Controller
             "message" => $result
         ]);
     }
+
+    // Searching posts by keyword
+    public function search(Request $request)
+    {   
+        $keyword = $request->q;
+        $posts = $this->postRepository->getListPostByKeyword($keyword);
+        return $posts;
+    }
 }
+
+

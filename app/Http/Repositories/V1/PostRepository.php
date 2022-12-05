@@ -32,9 +32,18 @@ class PostRepository
         $post->fill($data);
     }
 
+    // Delete post row from database
     public function deletePostRow($post)
     {
         return $post->delete();
+    }
+
+     // Get list post by keyword
+    public function getListPostByKeyword($keyword)
+    {
+        return Post::where("title", "LIKE", "%" . $keyword . "%")
+            ->orWhere("content", "LIKE", "%" . $keyword . "%")
+            ->paginate(8);
     }
 }
 

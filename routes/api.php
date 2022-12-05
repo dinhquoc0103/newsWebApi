@@ -22,8 +22,28 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 Route::prefix('v1')->group(function () {
+    /* 
+    |--------------------------------------------------------------------------
+    |   Admin 
+    |--------------------------------------------------------------------------
+    */
     Route::prefix('admin')->group(function () {
-       Route::resource('post', AdminPostController::class)->except(['create', 'edit']); 
-       Route::resource('postCategory', AdminPostCategoryController::class)->except(['create', 'edit']); 
+        /* 
+        |--------------------------------------------------------------------------
+        |   Post Routes
+        |--------------------------------------------------------------------------
+        */
+        Route::resource('post', AdminPostController::class)->except(['create', 'edit']); 
+        Route::post('post/search', [AdminPostController::class, 'search']);
+
+
+        /* 
+        |--------------------------------------------------------------------------
+        |   PostCategory Routes
+        |--------------------------------------------------------------------------
+        */
+        Route::resource('postCategory', AdminPostCategoryController::class)->except(['create', 'edit']); 
     });
+
+
 });

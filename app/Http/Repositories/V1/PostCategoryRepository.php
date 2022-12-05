@@ -37,6 +37,12 @@ class PostCategoryRepository
     {
         return $post->delete();
     }
+
+    // Delete postCategory row from database
+    public function getListPostByKeyword($keyword)
+    {
+        return Post::where("title", $keyword)->get();
+    }
 }
 
 
